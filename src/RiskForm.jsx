@@ -39,7 +39,7 @@ export default function RiskForm() {
     e.preventDefault()
     setError('')
     if (!allAnswered) {
-      setError('Por favor responda todos os pontos antes de submeter.')
+      setError('Por favor avalie todos os critérios antes de prosseguir.')
       return
     }
 
@@ -100,16 +100,16 @@ export default function RiskForm() {
             <div className="risk-actions">
                 {allAnswered ? (
                     <button type="submit" className="risk-submit">
-                        Enviar
+                        Continuar
                     </button>
                 ) : (
                     <div className="risk-wait">
-                        Responda todos os pontos para enviar
+                        Avalie todos os critérios para avançar
                     </div>
                 )}
 
                 <button type="button" className="risk-reset" onClick={reset}>
-                    Resetar
+                    Limpar
                 </button>
             </div>
         </form>
