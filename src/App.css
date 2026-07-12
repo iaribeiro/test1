@@ -1,0 +1,192 @@
+:root{
+  --card-bg: #ffffff;
+}
+
+/* Básicos para body (caso o restante do projeto tenha sido revertido) */
+body {
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  margin: 0;
+  background: #f5f7fb;
+  color: #111;
+}
+
+/* Estilos do formulário (mobile-first) */
+.risk-form {
+  max-width: 480px;
+  margin: 24px auto;
+  background: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.risk-title {
+  font-size: 20px;
+  margin: 0 0 6px 0;
+}
+
+.risk-desc {
+  margin: 0 0 12px 0;
+  color: #444;
+}
+
+.risk-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.risk-fieldset {
+  border: none;
+  padding: 8px 0;
+  margin: 0;
+}
+
+.risk-legend {
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.risk-options {
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+}
+
+.risk-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex: 1 1 0;
+  user-select: none;
+}
+
+.risk-option input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  display: inline-block;
+  background: #f8f8f8;
+  cursor: pointer;
+}
+
+.risk-option input[type="radio"]:checked {
+  background: linear-gradient(180deg, #4caf50, #2e7d32);
+  border-color: #2e7d32;
+}
+
+.risk-badge {
+  font-weight: 600;
+  color: #222;
+}
+
+.risk-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  margin-top: 14px;
+  align-items: center;
+}
+
+.risk-submit, .risk-reset, .risk-clear {
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.risk-submit {
+  background: #1976d2;
+  color: white;
+  flex: 1 1 auto;
+}
+
+.risk-reset {
+  background: #f1f1f1;
+  color: #333;
+  flex: 0 0 110px;
+}
+
+.risk-clear {
+  margin-left: 8px;
+  background: transparent;
+  border: none;
+  color: #1976d2;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.risk-clear:hover {
+  text-decoration: underline;
+}
+
+.risk-error {
+  color: #b00020;
+  margin-top: 10px;
+}
+
+.risk-result {
+  margin-top: 18px;
+  padding-top: 12px;
+  border-top: 1px solid #eee;
+}
+
+.risk-label {
+  font-weight: 700;
+}
+
+.risk-wait {
+  color: #666;
+}
+
+@media (max-width: 420px) {
+  .risk-options {
+    gap: 6px;
+  }
+
+  .risk-option input[type="radio"] {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* Tablet / ecrã grande */
+@media (min-width: 900px) {
+  .risk-form {
+    max-width: 900px;
+    padding: 20px 24px;
+  }
+
+  /* duas colunas */
+  .risk-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .risk-fieldset {
+    width: calc(50% - 12px);
+    padding: 12px;
+    box-sizing: border-box;
+  }
+
+  .risk-options {
+    justify-content: flex-start;
+    gap: 12px;
+  }
+
+  .risk-option {
+    flex: 0 0 auto;
+    width: 56px;
+  }
+
+  .risk-actions {
+    justify-content: flex-end;
+  }
+}
