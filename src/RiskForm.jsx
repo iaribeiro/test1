@@ -56,7 +56,7 @@ export default function RiskForm() {
   return (
     <div className="risk-form">
       <h1 className="risk-title">Avaliação de Risco</h1>
-      <p className="risk-desc">Avalie os 8 pontos de 1 a 5. O resultado será exibido somente após o envio.</p>
+      <p className="risk-desc">Para calcular o risco, avalie os 8 pontos de 1 a 5.</p>
 
         <form onSubmit={onSubmit}>
             <div className="risk-grid">
