@@ -1,35 +1,106 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import './App.css'
 
 const QUESTIONS = [
-  'Ponto 1',
-  'Ponto 2',
-  'Ponto 3',
-  'Ponto 4',
-  'Ponto 5',
-  'Ponto 6',
-  'Ponto 7',
-  'Ponto 8',
+  {
+    title: 'Tipo de posição cirúrgica',
+    options: [
+      { value: 1, label: 'Supina' },
+      { value: 2, label: 'Lateral' },
+      { value: 3, label: 'Trendelenburg' },
+      { value: 4, label: 'Prona' },
+      { value: 5, label: 'Litotómica' },
+    ],
+  },
+  {
+    title: 'Tempo de cirurgia',
+    options: [
+      { value: 1, label: '<1h' },
+      { value: 2, label: '1-2h' },
+      { value: 3, label: '2-4h' },
+      { value: 4, label: '4-6h' },
+      { value: 5, label: '>6h' },
+    ],
+  },
+  {
+    title: 'Tipo de anestesia',
+    options: [
+      { value: 1, label: 'Local' },
+      { value: 2, label: 'Sedação' },
+      { value: 3, label: 'Regional' },
+      { value: 4, label: 'Geral' },
+      { value: 5, label: 'Geral + Regional' },
+    ],
+  },
+  {
+    title: 'Superfície de suporte',
+    options: [
+      { value: 1, label: 'Colchão de viscoelástico + coxins de viscoelástico' },
+      { value: 2, label: 'Colchão de espuma convencional + coxins de viscoelástico' },
+      { value: 3, label: 'Colchão de espuma convencional + coxins de espuma' },
+      { value: 4, label: 'Colchão de espuma convencional + coxins feitos com campos de algodão' },
+      { value: 5, label: 'Sem superfície de suporte ou utilização de suportes rígidos sem acolchoamento ou perneiras estreitas' },
+    ],
+  },
+  {
+    title: 'Posição dos membros',
+    options: [
+      { value: 1, label: 'Posição anatómica' },
+      { value: 2, label: 'Abertura dos membros superiores <90°' },
+      { value: 3, label: 'Elevação dos joelhos <90° e abertura dos membros inferiores <90° ou pescoço sem alinhamento mento-esternal' },
+      { value: 4, label: 'Elevação dos joelhos >90° ou abertura dos membros inferiores >90°' },
+      { value: 5, label: 'Elevação dos joelhos >90° e abertura dos membros inferiores >90° ou abertura dos membros superiores >90°' },
+    ],
+  },
+  {
+    title: 'Comorbilidades',
+    options: [
+      { value: 1, label: 'Sem comorbilidades' },
+      { value: 2, label: 'Doença vascular' },
+      { value: 3, label: 'Diabetes mellitus' },
+      { value: 4, label: 'Desnutrição ou obesidade' },
+      { value: 5, label: 'Lesão por pressão prévia, neuropatia diagnosticada ou trombose venosa profunda' },
+    ],
+  },
+  {
+    title: 'Idade',
+    options: [
+      { value: 1, label: '18 a 39 anos' },
+      { value: 2, label: '40 a 59 anos' },
+      { value: 3, label: '60 a 69 anos' },
+      { value: 4, label: '70 a 79 anos' },
+      { value: 5, label: 'Mais de 80 anos' },
+    ],
+  },
 ]
 
 export default function RiskForm() {
-  const [answers, setAnswers] = useState(Array(8).fill(null))
+  const [answers, setAnswers] = useState(Array(7).fill(null))
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState('')
   const [result, setResult] = useState(null)
+  const resultRef = useRef(null)
 
   const allAnswered = answers.every((a) => a !== null)
 
+  // Auto-scroll para o resultado quando é apresentado
+  useEffect(() => {
+    if (submitted && result && resultRef.current) {
+      setTimeout(() => {
+        resultRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      }, 100)
+    }
+  }, [submitted, result])
+
   function handleChange(index, value) {
     const next = answers.slice()
-    // allow clearing selection when value is null
     if (value === null) next[index] = null
     else next[index] = Number(value)
     setAnswers(next)
   }
 
   function reset() {
-    setAnswers(Array(8).fill(null))
+    setAnswers(Array(7).fill(null))
     setSubmitted(false)
     setError('')
     setResult(null)
@@ -39,15 +110,15 @@ export default function RiskForm() {
     e.preventDefault()
     setError('')
     if (!allAnswered) {
-      setError('Por favor avalie todos os critérios antes de prosseguir.')
+      setError('Por favor responda todos os 7 critérios antes de submeter.')
       return
     }
 
     const total = answers.reduce((s, v) => s + v, 0)
     let risk
-    if (total < 30) risk = 'Risco Moderado (menos de 30)'
-    else if (total > 30) risk = 'Risco Elevado (mais de 30)'
-    else risk = 'Risco Moderado (30)'
+    if (total >= 7 && total <= 19) risk = 'Baixo risco'
+    else if (total >= 20 && total <= 35) risk = 'Alto risco'
+    else risk = 'Risco não classificado'
 
     setResult({ total, risk })
     setSubmitted(true)
@@ -55,73 +126,62 @@ export default function RiskForm() {
 
   return (
     <div className="risk-form">
-      <h1 className="risk-title">Avaliação de Risco</h1>
-      <p className="risk-desc">Para calcular o risco, avalie os 8 pontos de 1 a 5.</p>
+      <h1 className="risk-title">Avaliação de Risco de Lesão por Pressão em Sala de Operações</h1>
+      <p className="risk-desc">Responda aos 7 critérios para avaliar o risco. Pontuação: 7-19 = Baixo risco; 20-35 = Alto risco.</p>
 
-        <form onSubmit={onSubmit}>
-            <div className="risk-grid">
-                {QUESTIONS.map((q, i) => (
-                    <fieldset key={i} className="risk-fieldset">
-                        <legend className="risk-legend">{q}</legend>
+      <form onSubmit={onSubmit}>
+        <div className="risk-grid">
+          {QUESTIONS.map((q, i) => (
+            <fieldset key={i} className="risk-fieldset">
+              <legend className="risk-legend">{i + 1}. {q.title}</legend>
 
-                        <div className="risk-options">
-                            {[1, 2, 3, 4, 5].map((v) => (
-                                <label key={v} className="risk-option">
-                                    <input
-                                        type="radio"
-                                        name={`q${i}`}
-                                        value={v}
-                                        checked={answers[i] === v}
-                                        onChange={(e) => handleChange(i, Number(e.target.value))}
-                                        onClick={() => answers[i] === v && handleChange(i, null)}
-                                    />
-                                    <span className="risk-badge">{v}</span>
-                                </label>
-                            ))}
-
-                            {/* botão para remover seleção (acessível) */}
-                            {answers[i] !== null && (
-                                <button
-                                    type="button"
-                                    className="risk-clear"
-                                    onClick={() => handleChange(i, null)}
-                                    aria-label={`Limpar resposta ${i + 1}`}
-                                >
-                                    Limpar
-                                </button>
-                            )}
-                        </div>
-                    </fieldset>
+              <div className="risk-options-buttons">
+                {q.options.map((opt) => (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    className={`risk-option-button ${answers[i] === opt.value ? 'selected' : ''}`}
+                    onClick={() => answers[i] === opt.value ? handleChange(i, null) : handleChange(i, opt.value)}
+                  >
+                    <span className="risk-points">{opt.value}</span>
+                    <span className="risk-description">{opt.label}</span>
+                  </button>
                 ))}
-            </div>
+              </div>
+            </fieldset>
+          ))}
+        </div>
 
-            {error && <div className="risk-error">{error}</div>}
+        {error && <div className="risk-error">{error}</div>}
 
-            <div className="risk-actions">
-                {allAnswered ? (
-                    <button type="submit" className="risk-submit">
-                        Continuar
-                    </button>
-                ) : (
-                    <div className="risk-wait">
-                        Avalie todos os critérios para avançar
-                    </div>
-                )}
+        <div className="risk-actions">
+          {allAnswered ? (
+            <button type="submit" className="risk-submit">Submeter</button>
+          ) : (
+            <div className="risk-wait">Responda todos os 7 critérios para enviar</div>
+          )}
 
-                <button type="button" className="risk-reset" onClick={reset}>
-                    Limpar
-                </button>
-            </div>
-        </form>
+          <button type="button" className="risk-reset" onClick={reset}>Limpar</button>
+        </div>
+      </form>
 
       {submitted && result && (
-        <div className="risk-result">
-          <h2>Resultado</h2>
-          <p><strong>Total:</strong> {result.total}</p>
-          <p>
-            <strong>Classificação:</strong>{' '}
-            <span className="risk-label" style={{ color: result.total > 30 ? 'crimson' : 'seagreen' }}>{result.risk}</span>
-          </p>
+        <div ref={resultRef} className={`risk-result risk-result-${result.risk === 'Alto risco' ? 'high' : 'low'}`}>
+          <div className="risk-result-icon">
+            {result.risk === 'Alto risco' ? '⚠️' : '✓'}
+          </div>
+          <h2>Resultado da Avaliação</h2>
+          <div className="risk-result-score">
+            <p className="risk-result-label">Pontuação total</p>
+            <p className="risk-result-number">{result.total}</p>
+            <p className="risk-result-max">de 35 pontos</p>
+          </div>
+          <div className="risk-result-classification">
+            <p className="risk-result-label">Classificação</p>
+            <p className={`risk-result-badge ${result.risk === 'Alto risco' ? 'high-risk' : 'low-risk'}`}>
+              {result.risk}
+            </p>
+          </div>
         </div>
       )}
     </div>

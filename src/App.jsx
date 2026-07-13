@@ -1,4 +1,3 @@
-import React from 'react'
 import RiskForm from './RiskForm'
 import './App.css'
 

@@ -10,183 +10,376 @@ body {
   color: #111;
 }
 
-/* Estilos do formulário (mobile-first) */
+/* Estilos do formulário (mobile-first, otimizado para tablet) */
 .risk-form {
-  max-width: 480px;
+  max-width: 1000px;
   margin: 24px auto;
   background: var(--card-bg);
   border-radius: 12px;
   box-shadow: 0 6px 18px rgba(0,0,0,0.06);
-  padding: 16px;
+  padding: 20px;
   box-sizing: border-box;
 }
 
 .risk-title {
-  font-size: 20px;
-  margin: 0 0 6px 0;
+  font-size: 24px;
+  margin: 0 0 8px 0;
 }
 
 .risk-desc {
-  margin: 0 0 12px 0;
+  margin: 0 0 20px 0;
   color: #444;
+  font-size: 14px;
 }
 
 .risk-grid {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 16px;
 }
 
 .risk-fieldset {
-  border: none;
-  padding: 8px 0;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
   margin: 0;
+  background: #fafafa;
 }
 
 .risk-legend {
   font-size: 16px;
+  margin-bottom: 12px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+/* Botões/cards das opções (tablet-optimized) */
+.risk-options-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
   margin-bottom: 8px;
 }
 
-.risk-options {
-  display: flex;
-  gap: 8px;
-  justify-content: space-between;
-}
-
-.risk-option {
+.risk-option-button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
-  flex: 1 1 0;
-  user-select: none;
-}
-
-.risk-option input[type="radio"] {
-  appearance: none;
-  -webkit-appearance: none;
-  width: 44px;
-  height: 44px;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px;
+  background: #ffffff;
+  border: 2px solid #ddd;
   border-radius: 10px;
-  border: 1px solid #ddd;
-  display: inline-block;
-  background: #f8f8f8;
   cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 13px;
+  min-height: 100px;
+  text-align: center;
 }
 
-.risk-option input[type="radio"]:checked {
-  background: linear-gradient(180deg, #4caf50, #2e7d32);
+.risk-option-button:hover {
+  border-color: #1976d2;
+  background: #f0f8ff;
+}
+
+.risk-option-button:active {
+  transform: scale(0.98);
+}
+
+.risk-option-button.selected {
+  background: linear-gradient(135deg, #4caf50, #2e7d32);
   border-color: #2e7d32;
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
 }
 
-.risk-badge {
-  font-weight: 600;
-  color: #222;
+.risk-points {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.risk-description {
+  font-size: 12px;
+  line-height: 1.3;
 }
 
 .risk-actions {
   display: flex;
-  gap: 8px;
-  justify-content: space-between;
-  margin-top: 14px;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 20px;
   align-items: center;
+  flex-wrap: wrap;
 }
 
-.risk-submit, .risk-reset, .risk-clear {
-  padding: 12px 16px;
+.risk-submit, .risk-reset {
+  padding: 14px 28px;
   border-radius: 10px;
   border: none;
   font-size: 16px;
   cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
 }
 
 .risk-submit {
   background: #1976d2;
   color: white;
-  flex: 1 1 auto;
+  min-width: 140px;
+}
+
+.risk-submit:hover {
+  background: #1565c0;
+  box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+}
+
+.risk-submit:disabled {
+  background: #bdbdbd;
+  cursor: not-allowed;
 }
 
 .risk-reset {
   background: #f1f1f1;
   color: #333;
-  flex: 0 0 110px;
+  min-width: 120px;
 }
 
-.risk-clear {
-  margin-left: 8px;
-  background: transparent;
-  border: none;
-  color: #1976d2;
-  font-size: 13px;
-  cursor: pointer;
-}
-
-.risk-clear:hover {
-  text-decoration: underline;
+.risk-reset:hover {
+  background: #e0e0e0;
 }
 
 .risk-error {
   color: #b00020;
-  margin-top: 10px;
+  margin: 12px 0;
+  padding: 10px;
+  background: #ffebee;
+  border-radius: 6px;
+  font-size: 14px;
 }
 
+/* Painel de Resultado - MUITO VISÍVEL */
 .risk-result {
-  margin-top: 18px;
-  padding-top: 12px;
-  border-top: 1px solid #eee;
+  margin-top: 32px;
+  padding: 32px;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  animation: slideUp 0.6s ease-out, fadeIn 0.6s ease-out;
+  border: 3px solid;
 }
 
-.risk-label {
+.risk-result.risk-result-high {
+  border-color: #d32f2f;
+  background: linear-gradient(135deg, #ffebee 0%, #fff3e0 100%);
+}
+
+.risk-result.risk-result-low {
+  border-color: #388e3c;
+  background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.risk-result-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.risk-result h2 {
+  margin: 0 0 24px 0;
+  font-size: 28px;
+  color: #1a1a1a;
   font-weight: 700;
 }
 
-.risk-wait {
+.risk-result-score {
+  margin: 24px 0;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 12px;
+}
+
+.risk-result-label {
+  margin: 0;
+  font-size: 14px;
   color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
 }
 
-@media (max-width: 420px) {
-  .risk-options {
-    gap: 6px;
-  }
+.risk-result-number {
+  margin: 12px 0 0 0;
+  font-size: 56px;
+  font-weight: 700;
+  color: #1976d2;
+  line-height: 1;
+}
 
-  .risk-option input[type="radio"] {
-    width: 40px;
-    height: 40px;
+.risk-result-max {
+  margin: 8px 0 0 0;
+  font-size: 14px;
+  color: #999;
+}
+
+.risk-result-classification {
+  margin: 24px 0 0 0;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 12px;
+}
+
+.risk-result-badge {
+  margin: 16px 0 0 0;
+  padding: 16px 32px;
+  font-size: 32px;
+  font-weight: 700;
+  border-radius: 12px;
+  display: inline-block;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.risk-result-badge.high-risk {
+  background: linear-gradient(135deg, #d32f2f, #c62828);
+  color: white;
+  animation: pulse 1s ease-in-out infinite;
+}
+
+.risk-result-badge.low-risk {
+  background: linear-gradient(135deg, #388e3c, #2e7d32);
+  color: white;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
+  }
+  50% {
+    box-shadow: 0 4px 20px rgba(211, 47, 47, 0.6);
   }
 }
 
-/* Tablet / ecrã grande */
-@media (min-width: 900px) {
+.risk-wait {
+  color: #999;
+  font-size: 14px;
+}
+
+/* Mobile responsivo */
+@media (max-width: 480px) {
   .risk-form {
-    max-width: 900px;
-    padding: 20px 24px;
-  }
-
-  /* duas colunas */
-  .risk-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-
-  .risk-fieldset {
-    width: calc(50% - 12px);
     padding: 12px;
-    box-sizing: border-box;
+    max-width: 100%;
   }
 
-  .risk-options {
-    justify-content: flex-start;
-    gap: 12px;
+  .risk-title {
+    font-size: 20px;
   }
 
-  .risk-option {
-    flex: 0 0 auto;
-    width: 56px;
+  .risk-options-buttons {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 8px;
+  }
+
+  .risk-option-button {
+    min-height: 90px;
+    padding: 12px;
+    font-size: 12px;
   }
 
   .risk-actions {
-    justify-content: flex-end;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .risk-submit, .risk-reset {
+    width: 100%;
+  }
+}
+
+/* Tablet médio (600px - 900px) */
+@media (min-width: 600px) and (max-width: 899px) {
+  .risk-options-buttons {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+/* Tablet grande / Desktop (900px+) */
+@media (min-width: 900px) {
+  .risk-form {
+    max-width: 1200px;
+    padding: 24px;
+  }
+
+  .risk-title {
+    font-size: 28px;
+    margin-bottom: 12px;
+  }
+
+  .risk-desc {
+    font-size: 15px;
+    margin-bottom: 24px;
+  }
+
+  .risk-grid {
+    gap: 20px;
+  }
+
+  .risk-fieldset {
+    padding: 20px;
+  }
+
+  .risk-legend {
+    font-size: 17px;
+    margin-bottom: 14px;
+  }
+
+  /* Mostrar até 5 botões em linha em tablets grandes */
+  .risk-options-buttons {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+  }
+
+  .risk-option-button {
+    min-height: 110px;
+    padding: 14px;
+    font-size: 13px;
+  }
+
+  .risk-points {
+    font-size: 20px;
+  }
+
+  .risk-actions {
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .risk-submit, .risk-reset {
+    padding: 14px 32px;
+    font-size: 16px;
   }
 }
