@@ -1,5 +1,24 @@
 :root{
   --card-bg: #ffffff;
+  --hcv-red: #d42327; /* Hospital Cruz Vermelha red (provided) */
+  --hcv-gray: #808285; /* neutral gray from logo (provided) */
+  --hcv-accent: #f5f5f5;
+}
+
+.app-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 14px 0 6px 0;
+  background: linear-gradient(180deg, rgba(193,18,31,0.06), transparent);
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+
+.hcv-logo {
+  height: 44px;
+  width: auto;
+  max-width: 320px;
+  display: block;
 }
 
 /* Básicos para body (caso o restante do projeto tenha sido revertido) */
@@ -88,11 +107,11 @@ body {
 }
 
 .risk-option-button.selected {
-  background: linear-gradient(135deg, #4caf50, #2e7d32);
-  border-color: #2e7d32;
-  color: white;
+  background: var(--hcv-red);
+  border-color: var(--hcv-red);
+  color: #ffffff;
   font-weight: 600;
-  box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+  box-shadow: 0 6px 20px rgba(212,35,39,0.18);
 }
 
 .risk-points {
@@ -125,14 +144,13 @@ body {
 }
 
 .risk-submit {
-  background: #1976d2;
-  color: white;
+  background: var(--hcv-red);
+  color: #ffffff;
   min-width: 140px;
 }
 
 .risk-submit:hover {
-  background: #1565c0;
-  box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+  background: var(--hcv-gray);
 }
 
 .risk-submit:disabled {
@@ -172,8 +190,8 @@ body {
 }
 
 .risk-result.risk-result-high {
-  border-color: #d32f2f;
-  background: linear-gradient(135deg, #ffebee 0%, #fff3e0 100%);
+  border-color: var(--hcv-red);
+  background: linear-gradient(135deg, #fff0f0 0%, #fff7f7 100%);
 }
 
 .risk-result.risk-result-low {
@@ -264,9 +282,8 @@ body {
 }
 
 .risk-result-badge.high-risk {
-  background: linear-gradient(135deg, #d32f2f, #c62828);
-  color: white;
-  animation: pulse 1s ease-in-out infinite;
+  background: var(--hcv-red);
+  color: #ffffff;
 }
 
 .risk-result-badge.low-risk {
@@ -276,10 +293,10 @@ body {
 
 @keyframes pulse {
   0%, 100% {
-    box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
+    box-shadow: 0 4px 12px rgba(212, 35, 39, 0.3);
   }
   50% {
-    box-shadow: 0 4px 20px rgba(211, 47, 47, 0.6);
+    box-shadow: 0 4px 20px rgba(212, 35, 39, 0.6);
   }
 }
 

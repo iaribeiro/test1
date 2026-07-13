@@ -126,6 +126,14 @@ export default function RiskForm() {
 
   return (
     <div className="risk-form">
+      <header className="app-header">
+        <img
+          className="hcv-logo"
+          src="/images/hcv-logotipo-horizontal-236x111.png"
+          onError={(e)=>{e.currentTarget.onerror=null; e.currentTarget.src='https://hospitalcruzvermelha.pt/wp-content/uploads/2026/04/hcv-logotipo-horizontal-236x111.png'}}
+          alt="Hospital Cruz Vermelha"
+        />
+      </header>
       <h1 className="risk-title">Avaliação de Risco de Lesão por Pressão em Sala de Operações</h1>
       <p className="risk-desc">Responda aos 7 critérios para avaliar o risco. Pontuação: 7-19 = Baixo risco; 20-35 = Alto risco.</p>
 
