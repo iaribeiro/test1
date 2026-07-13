@@ -134,7 +134,7 @@ export default function RiskForm() {
           alt="Hospital Cruz Vermelha"
         />
       </header>
-      <h1 className="risk-title">Avaliação de Risco de Lesão por Pressão em Sala de Operações</h1>
+      <h1 className="risk-title">Avaliação de Risco de Lesão por Pressão em Sala Operatória</h1>
       <p className="risk-desc">Responda aos 7 critérios para avaliar o risco. Pontuação: 7-19 = Baixo risco; 20-35 = Alto risco.</p>
 
       <form onSubmit={onSubmit}>
@@ -166,7 +166,7 @@ export default function RiskForm() {
           {allAnswered ? (
             <button type="submit" className="risk-submit">Submeter</button>
           ) : (
-            <div className="risk-wait">Responda todos os 7 critérios para enviar</div>
+            <div className="risk-wait">Responda a todos os 7 critérios para continuar</div>
           )}
 
           <button type="button" className="risk-reset" onClick={reset}>Limpar</button>
