@@ -9,13 +9,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 14px 0 6px 0;
-  background: linear-gradient(180deg, rgba(193,18,31,0.06), transparent);
-  border-bottom: 1px solid rgba(0,0,0,0.04);
+  padding: 20px 0 20px 0;
+  background: #ffffff;
+  border-bottom: 2px solid #e0e0e0;
+  margin-bottom: 0;
 }
 
 .hcv-logo {
-  height: 44px;
+  height: 70px;
   width: auto;
   max-width: 320px;
   display: block;
@@ -42,7 +43,7 @@ body {
 
 .risk-title {
   font-size: 24px;
-  margin: 0 0 8px 0;
+  margin: 24px 0 8px 0;
 }
 
 .risk-desc {
