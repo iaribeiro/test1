@@ -129,7 +129,7 @@ export default function RiskForm() {
       <header className="app-header">
         <img
           className="hcv-logo"
-          src="/images/hcv-logotipo-horizontal-236x111.png"
+          src="/public/hcv-logotipo-horizontal-236x111.png"
           onError={(e)=>{e.currentTarget.onerror=null; e.currentTarget.src='https://hospitalcruzvermelha.pt/wp-content/uploads/2026/04/hcv-logotipo-horizontal-236x111.png'}}
           alt="Hospital Cruz Vermelha"
         />
