@@ -306,6 +306,49 @@ body {
   font-size: 14px;
 }
 
+/* Painel de Intervenções para Baixo Risco */
+.risk-interventions {
+  margin-top: 28px;
+  padding-top: 28px;
+  border-top: 2px solid rgba(56, 142, 60, 0.2);
+  animation: slideUp 0.6s ease-out 0.3s both;
+}
+
+.risk-interventions h3 {
+  margin: 0 0 16px 0;
+  font-size: 20px;
+  color: #388e3c;
+  font-weight: 700;
+  text-align: center;
+}
+
+.risk-interventions-list {
+  margin: 0;
+  padding: 0 0 0 24px;
+  list-style: none;
+  text-align: left;
+  display: inline-block;
+}
+
+.risk-interventions-list li {
+  margin: 10px 0;
+  padding-left: 24px;
+  position: relative;
+  color: #2e7d32;
+  font-size: 15px;
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+.risk-interventions-list li:before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #388e3c;
+  font-weight: 700;
+  font-size: 16px;
+}
+
 /* Mobile responsivo */
 @media (max-width: 480px) {
   .risk-form {
@@ -333,10 +376,23 @@ body {
     width: 100%;
   }
 
-  .risk-submit, .risk-reset {
-    width: 100%;
-  }
-}
+   .risk-submit, .risk-reset {
+     width: 100%;
+   }
+
+   .risk-interventions h3 {
+     font-size: 18px;
+   }
+
+   .risk-interventions-list {
+     padding: 0 0 0 20px;
+   }
+
+   .risk-interventions-list li {
+     padding-left: 20px;
+     font-size: 14px;
+   }
+ }
 
 /* Tablet médio (600px - 900px) */
 @media (min-width: 600px) and (max-width: 899px) {
@@ -396,8 +452,17 @@ body {
     gap: 16px;
   }
 
-  .risk-submit, .risk-reset {
-    padding: 14px 32px;
-    font-size: 16px;
-  }
-}
+   .risk-submit, .risk-reset {
+     padding: 14px 32px;
+     font-size: 16px;
+   }
+
+   .risk-interventions-list {
+     padding: 0 0 0 28px;
+   }
+
+   .risk-interventions-list li {
+     margin: 12px 0;
+     font-size: 15px;
+   }
+ }

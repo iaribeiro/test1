@@ -5,11 +5,11 @@ const QUESTIONS = [
   {
     title: 'Tipo de posição cirúrgica',
     options: [
-      { value: 1, label: 'Supina' },
+      { value: 1, label: 'Dorsal' },
       { value: 2, label: 'Lateral' },
       { value: 3, label: 'Trendelenburg' },
-      { value: 4, label: 'Prona' },
-      { value: 5, label: 'Litotómica' },
+      { value: 4, label: 'Ventral' },
+      { value: 5, label: 'Litotomia' },
     ],
   },
   {
@@ -33,12 +33,12 @@ const QUESTIONS = [
     ],
   },
   {
-    title: 'Superfície de suporte',
+    title: 'Superfícies de apoio',
     options: [
       { value: 1, label: 'Colchão de viscoelástico + coxins de viscoelástico' },
-      { value: 2, label: 'Colchão de espuma convencional + coxins de viscoelástico' },
-      { value: 3, label: 'Colchão de espuma convencional + coxins de espuma' },
-      { value: 4, label: 'Colchão de espuma convencional + coxins feitos com campos de algodão' },
+      { value: 2, label: 'Colchão de mesa cirúrgica de espuma (convencional) + almofadas de viscoelástico' },
+      { value: 3, label: 'Colchão de mesa cirúrgica de espuma (convencional) + almofadas de espuma' },
+      { value: 4, label: 'Colchão de mesa cirúrgica de espuma (convencional) + almofadas feitas com campos de algodão' },
       { value: 5, label: 'Sem superfície de suporte ou utilização de suportes rígidos sem acolchoamento ou perneiras estreitas' },
     ],
   },
@@ -63,7 +63,7 @@ const QUESTIONS = [
     ],
   },
   {
-    title: 'Idade',
+    title: 'Idade do doente',
     options: [
       { value: 1, label: '18 a 39 anos' },
       { value: 2, label: '40 a 59 anos' },
@@ -173,25 +173,42 @@ export default function RiskForm() {
         </div>
       </form>
 
-      {submitted && result && (
-        <div ref={resultRef} className={`risk-result risk-result-${result.risk === 'Alto risco' ? 'high' : 'low'}`}>
-          <div className="risk-result-icon">
-            {result.risk === 'Alto risco' ? '⚠️' : '✓'}
-          </div>
-          <h2>Resultado da Avaliação</h2>
-          <div className="risk-result-score">
-            <p className="risk-result-label">Pontuação total</p>
-            <p className="risk-result-number">{result.total}</p>
-            <p className="risk-result-max">de 35 pontos</p>
-          </div>
-          <div className="risk-result-classification">
-            <p className="risk-result-label">Classificação</p>
-            <p className={`risk-result-badge ${result.risk === 'Alto risco' ? 'high-risk' : 'low-risk'}`}>
-              {result.risk}
-            </p>
-          </div>
-        </div>
-      )}
+       {submitted && result && (
+         <div ref={resultRef} className={`risk-result risk-result-${result.risk === 'Alto risco' ? 'high' : 'low'}`}>
+           <div className="risk-result-icon">
+             {result.risk === 'Alto risco' ? '⚠️' : '✓'}
+           </div>
+           <h2>Resultado da Avaliação</h2>
+           <div className="risk-result-score">
+             <p className="risk-result-label">Pontuação total</p>
+             <p className="risk-result-number">{result.total}</p>
+             <p className="risk-result-max">de 35 pontos</p>
+           </div>
+           <div className="risk-result-classification">
+             <p className="risk-result-label">Classificação</p>
+             <p className={`risk-result-badge ${result.risk === 'Alto risco' ? 'high-risk' : 'low-risk'}`}>
+               {result.risk}
+             </p>
+           </div>
+
+           {result.risk === 'Baixo risco' && (
+             <div className="risk-interventions">
+               <h3>Intervenções para Baixo Risco</h3>
+               <ul className="risk-interventions-list">
+                 <li>Alinhamento corporal fisiológico</li>
+                 <li>Evitar flexão prolongada do cotovelo superior a 90°</li>
+                 <li>Posição Lateral (palmas das mãos posição anterior)</li>
+                 <li>Verificar cabeça e pescoço</li>
+                 <li>Aplicar dispositivos profiláticos nas regiões com proeminências ósseas</li>
+                 <li>Membros fixos</li>
+                 <li>Proteger os olhos/lubrificar</li>
+                 <li>Vigiar forças de fricção e/ou cisalhamento</li>
+                 <li>Avaliar a temperatura da pele</li>
+               </ul>
+             </div>
+           )}
+         </div>
+       )}
     </div>
   )
 }
