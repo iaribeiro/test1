@@ -74,11 +74,39 @@ const QUESTIONS = [
   },
 ]
 
+// Intervenções aplicáveis a todos os doentes (baixo e alto risco)
+const COMMON_INTERVENTIONS = [
+  'Reavaliar a pele do doente antes do procedimento cirúrgico.',
+  'Verificar o alinhamento corporal fisiológico do doente.',
+  'Aplicar dispositivos profiláticos nas regiões de proeminências ósseas.',
+  'Evitar o contacto da pele com superfícies rígidas.',
+  'Limitar a abdução do braço a ≤ 90°, fixando-o em supinação (palma da mão anterior).',
+  'Evitar a flexão prolongada do cotovelo > 90°.',
+  'Manter a cabeça e o pescoço em posição neutra; evitar a rotação lateral e a hiperextensão prolongada (> 4h).',
+  'Limitar a extensão/flexão da articulação coxo-femoral (proteção dos nervos ciático e femoral).',
+  'Garantir a fixação dos membros para reduzir o risco de queda.',
+  'Proteger e lubrificar os olhos; encerrar as pálpebras com dispositivo adesivo (anestesia geral).',
+  'Não posicionar o doente sobre dispositivos implantados superficialmente.',
+  'Fixar os dispositivos médicos para reduzir a pressão e a tensão sobre a pele.',
+  'Reavaliar os pontos de pressão periodicamente, sobretudo em cirurgias > 2h.',
+  'Nas transferências, reduzir a fricção e o cisalhamento com movimento lateral assistido por dispositivo adequado.',
+]
+
+// Intervenções adicionais exclusivas de alto risco
+// freeText: exige a descrição das intervenções adicionais realizadas
+const HIGH_RISK_INTERVENTIONS = [
+  { label: 'Comunicar o risco elevado a toda a equipa multidisciplinar.' },
+  { label: 'Recurso a pensos profiláticos.' },
+  { label: 'Outras.', freeText: true },
+]
+
 export default function RiskForm() {
   const [answers, setAnswers] = useState(Array(7).fill(null))
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState('')
   const [result, setResult] = useState(null)
+  const [checkedItems, setCheckedItems] = useState({})
+  const [otherText, setOtherText] = useState('')
   const resultRef = useRef(null)
 
   const allAnswered = answers.every((a) => a !== null)
@@ -104,6 +132,12 @@ export default function RiskForm() {
     setSubmitted(false)
     setError('')
     setResult(null)
+    setCheckedItems({})
+    setOtherText('')
+  }
+
+  function toggleItem(key) {
+    setCheckedItems((prev) => ({ ...prev, [key]: !prev[key] }))
   }
 
   function onSubmit(e) {
@@ -121,8 +155,30 @@ export default function RiskForm() {
     else risk = 'Risco não classificado'
 
     setResult({ total, risk })
+    setCheckedItems({})
+    setOtherText('')
     setSubmitted(true)
   }
+
+  const isHighRisk = result?.risk === 'Alto risco'
+  const checklist = result
+    ? [
+        ...COMMON_INTERVENTIONS.map((label, i) => ({ key: `c${i}`, label, high: false })),
+        ...(isHighRisk
+          ? HIGH_RISK_INTERVENTIONS.map((item, i) => ({
+              key: `h${i}`,
+              label: item.label,
+              freeText: !!item.freeText,
+              high: true,
+            }))
+          : []),
+      ]
+    : []
+  // "Outras" só conta como concluída depois de descritas as intervenções realizadas
+  const isItemDone = (item) =>
+    !!checkedItems[item.key] && (!item.freeText || otherText.trim() !== '')
+  const doneCount = checklist.filter(isItemDone).length
+  const allDone = checklist.length > 0 && doneCount === checklist.length
 
   return (
     <div className="risk-form">
@@ -191,20 +247,72 @@ export default function RiskForm() {
              </p>
            </div>
 
-           {result.risk === 'Baixo risco' && (
-             <div className="risk-interventions">
-               <h3>Intervenções para Baixo Risco</h3>
-               <ul className="risk-interventions-list">
-                 <li>Alinhamento corporal fisiológico</li>
-                 <li>Evitar flexão prolongada do cotovelo superior a 90°</li>
-                 <li>Posição Lateral (palmas das mãos posição anterior)</li>
-                 <li>Verificar cabeça e pescoço</li>
-                 <li>Aplicar dispositivos profiláticos nas regiões com proeminências ósseas</li>
-                 <li>Membros fixos</li>
-                 <li>Proteger os olhos/lubrificar</li>
-                 <li>Vigiar forças de fricção e/ou cisalhamento</li>
-                 <li>Avaliar a temperatura da pele</li>
+           {checklist.length > 0 && (
+             <div className={`risk-interventions ${isHighRisk ? 'high' : 'low'}`}>
+               <h3>Checklist de Intervenções</h3>
+               <p className="risk-checklist-hint">
+                 Marque cada intervenção à medida que a realiza na sala operatória.
+               </p>
+
+               <div className="risk-checklist-progress">
+                 <div className="risk-checklist-bar">
+                   <div
+                     className="risk-checklist-bar-fill"
+                     style={{ width: `${(doneCount / checklist.length) * 100}%` }}
+                   />
+                 </div>
+                 <span className="risk-checklist-count">
+                   {doneCount} de {checklist.length} concluídas
+                 </span>
+               </div>
+
+               <ul className="risk-checklist">
+                 {checklist.map((item) => (
+                   <li key={item.key}>
+                     <button
+                       type="button"
+                       className={`risk-checklist-item ${isItemDone(item) ? 'checked' : ''} ${item.high ? 'high-only' : ''}`}
+                       aria-pressed={!!checkedItems[item.key]}
+                       onClick={() => toggleItem(item.key)}
+                     >
+                       <span className="risk-checklist-box" aria-hidden="true">
+                         {isItemDone(item) ? '✓' : ''}
+                       </span>
+                       <span className="risk-checklist-label">
+                         {item.high && <span className="risk-checklist-tag">Alto risco</span>}
+                         {item.label}
+                       </span>
+                     </button>
+
+                     {item.freeText && checkedItems[item.key] && (
+                       <div className="risk-checklist-other">
+                         <label htmlFor="outras-intervencoes">
+                           Indique as intervenções adicionais realizadas
+                         </label>
+                         <textarea
+                           id="outras-intervencoes"
+                           className="risk-checklist-textarea"
+                           rows={3}
+                           value={otherText}
+                           placeholder="Descreva aqui as intervenções adicionais…"
+                           onChange={(e) => setOtherText(e.target.value)}
+                         />
+                         {otherText.trim() === '' && (
+                           <p className="risk-checklist-other-warning">
+                             Descreva as intervenções para concluir este item.
+                           </p>
+                         )}
+                       </div>
+                     )}
+                   </li>
+                 ))}
                </ul>
+
+               {allDone && (
+                 <div className="risk-checklist-done">
+                   ✓ Todas as intervenções foram realizadas.
+                 </div>
+               )}
              </div>
            )}
          </div>

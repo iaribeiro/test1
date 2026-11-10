@@ -306,47 +306,209 @@ body {
   font-size: 14px;
 }
 
-/* Painel de Intervenções para Baixo Risco */
+/* Checklist de Intervenções */
 .risk-interventions {
   margin-top: 28px;
   padding-top: 28px;
   border-top: 2px solid rgba(56, 142, 60, 0.2);
   animation: slideUp 0.6s ease-out 0.3s both;
+  --check-color: #388e3c;
+}
+
+.risk-interventions.high {
+  border-top-color: rgba(212, 35, 39, 0.2);
+  --check-color: var(--hcv-red);
 }
 
 .risk-interventions h3 {
-  margin: 0 0 16px 0;
+  margin: 0 0 8px 0;
   font-size: 20px;
-  color: #388e3c;
+  color: var(--check-color);
   font-weight: 700;
   text-align: center;
 }
 
-.risk-interventions-list {
+.risk-checklist-hint {
+  margin: 0 0 20px 0;
+  font-size: 14px;
+  color: #555;
+  text-align: center;
+}
+
+.risk-checklist-progress {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.risk-checklist-bar {
+  flex: 1;
+  height: 10px;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.risk-checklist-bar-fill {
+  height: 100%;
+  background: var(--check-color);
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+.risk-checklist-count {
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+  white-space: nowrap;
+}
+
+.risk-checklist {
   margin: 0;
-  padding: 0 0 0 24px;
+  padding: 0;
   list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.risk-checklist-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  width: 100%;
+  padding: 14px 16px;
+  background: #ffffff;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  cursor: pointer;
   text-align: left;
-  display: inline-block;
-}
-
-.risk-interventions-list li {
-  margin: 10px 0;
-  padding-left: 24px;
-  position: relative;
-  color: #2e7d32;
   font-size: 15px;
-  line-height: 1.6;
-  font-weight: 500;
+  line-height: 1.5;
+  color: #1a1a1a;
+  transition: all 0.2s ease;
+  font-family: inherit;
 }
 
-.risk-interventions-list li:before {
-  content: "✓";
-  position: absolute;
-  left: 0;
-  color: #388e3c;
+.risk-checklist-item:hover {
+  border-color: var(--check-color);
+}
+
+.risk-checklist-item:active {
+  transform: scale(0.995);
+}
+
+.risk-checklist-item.checked {
+  background: rgba(56, 142, 60, 0.08);
+  border-color: var(--check-color);
+}
+
+.risk-interventions.high .risk-checklist-item.checked {
+  background: rgba(212, 35, 39, 0.06);
+}
+
+.risk-checklist-item.checked .risk-checklist-label {
+  /* text-decoration: line-through; */
+  color: #666;
+}
+
+.risk-checklist-item.high-only {
+  border-left: 6px solid var(--hcv-red);
+}
+
+.risk-checklist-box {
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  border: 2px solid #bbb;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+  background: #ffffff;
+  transition: all 0.2s ease;
+}
+
+.risk-checklist-item.checked .risk-checklist-box {
+  background: var(--check-color);
+  border-color: var(--check-color);
+}
+
+.risk-checklist-label {
+  flex: 1;
+}
+
+.risk-checklist-tag {
+  display: inline-block;
+  margin-right: 8px;
+  padding: 2px 8px;
+  background: var(--hcv-red);
+  color: #ffffff;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  vertical-align: middle;
+}
+
+/* Campo de texto livre do item "Outras" */
+.risk-checklist-other {
+  margin: 8px 0 0 0;
+  padding: 14px 16px;
+  border: 2px dashed var(--hcv-red);
+  border-radius: 10px;
+  background: #ffffff;
+  text-align: left;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.risk-checklist-other label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+}
+
+.risk-checklist-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #1a1a1a;
+  resize: vertical;
+}
+
+.risk-checklist-textarea:focus {
+  outline: none;
+  border-color: var(--hcv-red);
+}
+
+.risk-checklist-other-warning {
+  margin: 8px 0 0 0;
+  font-size: 13px;
+  color: var(--hcv-red);
+  font-weight: 600;
+}
+
+.risk-checklist-done {
+  margin-top: 20px;
+  padding: 14px;
+  border-radius: 10px;
+  background: var(--check-color);
+  color: #ffffff;
   font-weight: 700;
   font-size: 16px;
+  text-align: center;
 }
 
 /* Mobile responsivo */
@@ -384,13 +546,20 @@ body {
      font-size: 18px;
    }
 
-   .risk-interventions-list {
-     padding: 0 0 0 20px;
+   .risk-checklist-item {
+     padding: 12px;
+     font-size: 14px;
+     gap: 10px;
    }
 
-   .risk-interventions-list li {
-     padding-left: 20px;
-     font-size: 14px;
+   .risk-checklist-progress {
+     flex-direction: column;
+     align-items: stretch;
+     gap: 8px;
+   }
+
+   .risk-checklist-count {
+     text-align: center;
    }
  }
 
@@ -457,12 +626,8 @@ body {
      font-size: 16px;
    }
 
-   .risk-interventions-list {
-     padding: 0 0 0 28px;
-   }
-
-   .risk-interventions-list li {
-     margin: 12px 0;
-     font-size: 15px;
+   .risk-checklist-item {
+     padding: 16px 20px;
+     font-size: 16px;
    }
  }
