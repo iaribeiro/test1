@@ -75,29 +75,39 @@ const QUESTIONS = [
 ]
 
 // Intervenções aplicáveis a todos os doentes (baixo e alto risco)
+// choices: exige a seleção de uma das opções para o item ficar respondido
 const COMMON_INTERVENTIONS = [
-  'Reavaliar a pele do doente antes do procedimento cirúrgico.',
-  'Verificar o alinhamento corporal fisiológico do doente.',
-  'Aplicar dispositivos profiláticos nas regiões de proeminências ósseas.',
-  'Evitar o contacto da pele com superfícies rígidas.',
-  'Limitar a abdução do braço a ≤ 90°, fixando-o em supinação (palma da mão anterior).',
-  'Evitar a flexão prolongada do cotovelo > 90°.',
-  'Manter a cabeça e o pescoço em posição neutra; evitar a rotação lateral e a hiperextensão prolongada (> 4h).',
-  'Limitar a extensão/flexão da articulação coxo-femoral (proteção dos nervos ciático e femoral).',
-  'Garantir a fixação dos membros para reduzir o risco de queda.',
-  'Proteger e lubrificar os olhos; encerrar as pálpebras com dispositivo adesivo (anestesia geral).',
-  'Não posicionar o doente sobre dispositivos implantados superficialmente.',
-  'Fixar os dispositivos médicos para reduzir a pressão e a tensão sobre a pele.',
-  'Reavaliar os pontos de pressão periodicamente, sobretudo em cirurgias > 2h.',
-  'Nas transferências, reduzir a fricção e o cisalhamento com movimento lateral assistido por dispositivo adequado.',
+  { label: 'Reavaliar a pele do doente antes do procedimento cirúrgico.' },
+  { label: 'Verificar o alinhamento corporal fisiológico do doente.' },
+  { label: 'Aplicar dispositivos profiláticos nas regiões de proeminências ósseas.' },
+  { label: 'Evitar o contacto da pele com superfícies rígidas.' },
+  { label: 'Limitar a abdução do braço a ≤ 90°, fixando-o em supinação (palma da mão anterior).' },
+  { label: 'Evitar a flexão prolongada do cotovelo > 90°.' },
+  { label: 'Manter a cabeça e o pescoço em posição neutra; evitar a rotação lateral e a hiperextensão prolongada (> 4h).' },
+  { label: 'Limitar a extensão/flexão da articulação coxo-femoral (proteção dos nervos ciático e femoral).' },
+  { label: 'Garantir a fixação dos membros para reduzir o risco de queda.' },
+  {
+    label: 'Proteger e lubrificar os olhos; encerrar as pálpebras com dispositivo adesivo (anestesia geral).',
+    choices: ['Sim', 'Não'],
+  },
+  { label: 'Não posicionar o doente sobre dispositivos implantados superficialmente.' },
+  { label: 'Fixar os dispositivos médicos para reduzir a pressão e a tensão sobre a pele.' },
+  { label: 'Reavaliar os pontos de pressão periodicamente (cirurgias > 2h).' },
+  { label: 'Nas transferências, reduzir a fricção e o cisalhamento com movimento lateral assistido por dispositivo adequado.' },
 ]
 
 // Intervenções adicionais exclusivas de alto risco
-// freeText: exige a descrição das intervenções adicionais realizadas
+// freeText + freeTextWhen: só pede a descrição quando a opção indicada é escolhida
 const HIGH_RISK_INTERVENTIONS = [
   { label: 'Comunicar o risco elevado a toda a equipa multidisciplinar.' },
-  { label: 'Recurso a pensos profiláticos.' },
-  { label: 'Outras.', freeText: true },
+  { label: 'Recurso a pensos profiláticos.', choices: ['Sim', 'Não'] },
+  {
+    label: 'Outras.',
+    choices: ['Sim', 'Não'],
+    choicesLabel: 'Realizou outras intervenções?',
+    freeText: true,
+    freeTextWhen: 'Sim',
+  },
 ]
 
 export default function RiskForm() {
@@ -107,6 +117,8 @@ export default function RiskForm() {
   const [result, setResult] = useState(null)
   const [checkedItems, setCheckedItems] = useState({})
   const [otherText, setOtherText] = useState('')
+  const [itemChoices, setItemChoices] = useState({})
+  const [showHint, setShowHint] = useState(false)
   const resultRef = useRef(null)
 
   const allAnswered = answers.every((a) => a !== null)
@@ -134,10 +146,24 @@ export default function RiskForm() {
     setResult(null)
     setCheckedItems({})
     setOtherText('')
+    setItemChoices({})
   }
 
-  function toggleItem(key) {
-    setCheckedItems((prev) => ({ ...prev, [key]: !prev[key] }))
+  function toggleItem(item) {
+    const willBeChecked = !checkedItems[item.key]
+    setCheckedItems((prev) => ({ ...prev, [item.key]: willBeChecked }))
+    // ao desmarcar, limpar a subseleção e a descrição associadas
+    if (!willBeChecked) {
+      setItemChoices((prev) => ({ ...prev, [item.key]: null }))
+      if (item.freeText) setOtherText('')
+    }
+  }
+
+  function selectChoice(item, choice) {
+    setItemChoices((prev) => ({ ...prev, [item.key]: choice }))
+    setCheckedItems((prev) => ({ ...prev, [item.key]: true }))
+    // escolha que dispensa a descrição: limpar o texto já introduzido
+    if (item.freeTextWhen && choice !== item.freeTextWhen) setOtherText('')
   }
 
   function onSubmit(e) {
@@ -157,26 +183,38 @@ export default function RiskForm() {
     setResult({ total, risk })
     setCheckedItems({})
     setOtherText('')
+    setItemChoices({})
     setSubmitted(true)
   }
 
   const isHighRisk = result?.risk === 'Alto risco'
   const checklist = result
     ? [
-        ...COMMON_INTERVENTIONS.map((label, i) => ({ key: `c${i}`, label, high: false })),
+        ...COMMON_INTERVENTIONS.map((item, i) => ({
+          ...item,
+          key: `c${i}`,
+          choices: item.choices || null,
+          high: false,
+        })),
         ...(isHighRisk
           ? HIGH_RISK_INTERVENTIONS.map((item, i) => ({
+              ...item,
               key: `h${i}`,
-              label: item.label,
-              freeText: !!item.freeText,
+              choices: item.choices || null,
               high: true,
             }))
           : []),
       ]
     : []
-  // "Outras" só conta como concluída depois de descritas as intervenções realizadas
+  // A descrição só é pedida quando o item não tem Sim/Não ou quando a opção escolhida a exige
+  const needsFreeText = (item) =>
+    !!item.freeText && (!item.freeTextWhen || itemChoices[item.key] === item.freeTextWhen)
+
+  // Itens com Sim/Não exigem uma opção selecionada; "Outras" + Sim exige ainda a descrição
   const isItemDone = (item) =>
-    !!checkedItems[item.key] && (!item.freeText || otherText.trim() !== '')
+    !!checkedItems[item.key] &&
+    (!item.choices || !!itemChoices[item.key]) &&
+    (!needsFreeText(item) || otherText.trim() !== '')
   const doneCount = checklist.filter(isItemDone).length
   const allDone = checklist.length > 0 && doneCount === checklist.length
 
@@ -190,8 +228,20 @@ export default function RiskForm() {
           alt="Hospital Cruz Vermelha"
         />
       </header>
-      <h1 className="risk-title">Avaliação de Risco de Lesão por Pressão em Sala Operatória</h1>
-      <p className="risk-desc">Responda aos 7 critérios para avaliar o risco. Pontuação: 7-19 = Baixo risco; 20-35 = Alto risco.</p>
+      <h1 className="risk-title">Escala ELPO</h1>
+      <button
+        type="button"
+        className={`risk-subtitle ${showHint ? 'open' : ''}`}
+        aria-expanded={showHint}
+        onClick={() => setShowHint((v) => !v)}
+      >
+        <span className="risk-subtitle-text">
+          Avaliação de Risco de Lesão por Pressão em Sala Operatória
+        </span>
+        <span className="risk-desc">
+          Responda aos 7 critérios para avaliar o risco. Pontuação: 7-19 = Baixo risco; 20-35 = Alto risco.
+        </span>
+      </button>
 
       <form onSubmit={onSubmit}>
         <div className="risk-grid">
@@ -231,17 +281,10 @@ export default function RiskForm() {
 
        {submitted && result && (
          <div ref={resultRef} className={`risk-result risk-result-${result.risk === 'Alto risco' ? 'high' : 'low'}`}>
-           <div className="risk-result-icon">
-             {result.risk === 'Alto risco' ? '⚠️' : '✓'}
-           </div>
-           <h2>Resultado da Avaliação</h2>
-           <div className="risk-result-score">
-             <p className="risk-result-label">Pontuação total</p>
-             <p className="risk-result-number">{result.total}</p>
-             <p className="risk-result-max">de 35 pontos</p>
-           </div>
            <div className="risk-result-classification">
-             <p className="risk-result-label">Classificação</p>
+             <p className="risk-result-label">
+               Score · <span className="risk-result-score">{result.total}</span>
+             </p>
              <p className={`risk-result-badge ${result.risk === 'Alto risco' ? 'high-risk' : 'low-risk'}`}>
                {result.risk}
              </p>
@@ -273,7 +316,7 @@ export default function RiskForm() {
                        type="button"
                        className={`risk-checklist-item ${isItemDone(item) ? 'checked' : ''} ${item.high ? 'high-only' : ''}`}
                        aria-pressed={!!checkedItems[item.key]}
-                       onClick={() => toggleItem(item.key)}
+                       onClick={() => toggleItem(item)}
                      >
                        <span className="risk-checklist-box" aria-hidden="true">
                          {isItemDone(item) ? '✓' : ''}
@@ -281,10 +324,37 @@ export default function RiskForm() {
                        <span className="risk-checklist-label">
                          {item.high && <span className="risk-checklist-tag">Alto risco</span>}
                          {item.label}
+                         {item.choices && itemChoices[item.key] && (
+                           <span className="risk-checklist-answer">{itemChoices[item.key]}</span>
+                         )}
                        </span>
                      </button>
 
-                     {item.freeText && checkedItems[item.key] && (
+                     {item.choices && checkedItems[item.key] && (
+                       <div className="risk-checklist-choices">
+                         <span className="risk-checklist-choices-label">
+                           {item.choicesLabel || 'Realizado?'}
+                         </span>
+                         {item.choices.map((choice) => (
+                           <button
+                             key={choice}
+                             type="button"
+                             className={`risk-checklist-choice ${itemChoices[item.key] === choice ? 'selected' : ''}`}
+                             aria-pressed={itemChoices[item.key] === choice}
+                             onClick={() => selectChoice(item, choice)}
+                           >
+                             {choice}
+                           </button>
+                         ))}
+                         {!itemChoices[item.key] && (
+                           <span className="risk-checklist-choices-warning">
+                             Selecione uma opção para concluir este item.
+                           </span>
+                         )}
+                       </div>
+                     )}
+
+                     {needsFreeText(item) && checkedItems[item.key] && (
                        <div className="risk-checklist-other">
                          <label htmlFor="outras-intervencoes">
                            Indique as intervenções adicionais realizadas
