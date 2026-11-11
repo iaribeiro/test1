@@ -149,8 +149,8 @@ body {
 }
 
 .risk-option-button.selected {
-  background: var(--hcv-red);
-  border-color: var(--hcv-red);
+  background: var(--hcv-grey);
+  border-color: var(--hcv-grey);
   color: #ffffff;
   font-weight: 600;
   box-shadow: 0 6px 20px rgba(212,35,39,0.18);
